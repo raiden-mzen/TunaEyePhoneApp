@@ -243,3 +243,39 @@
 {"_e":"devserver:start","_t":1791546816156,"mode":"development","web":true,"baseUrl":"","asyncRoutes":false,"routerRoot":"../..\\..\\app","serverComponents":false,"serverActions":false,"serverRendering":false,"apiRoutes":false,"exporting":false}
 {"_e":"metro:config","_t":1791546821197,"serverRoot":"../..\\..","projectRoot":"../..\\..","exporting":false,"flags":{"autolinkingModuleResolution":false,"serverActions":false,"serverComponents":false,"reactCompiler":false,"optimizeGraph":false,"treeshaking":false,"logbox":false}}
 {"_e":"expo:dev-tools-plugin:load","_t":1791546824661,"plugins":[]}
+{"_e":"metro:instantiate","_t":1791546835332,"atlas":false,"workers":6,"host":"::","port":8081}
+{"_e":"metro:bundling:started","_t":1791546901944,"id":"2","platform":"android","environment":null,"entry":"node_modules\\expo\\AppEntry.js"}
+{"_e":"metro:bundling:progress","_t":1791546901945,"id":"2","progress":0,"total":1,"current":0}
+{"_e":"metro:bundling:progress","_t":1791546901950,"id":"2","progress":0,"total":1,"current":0}
+{"_e":"metro:bundling:progress","_t":1791546902051,"id":"2","progress":0.03215219976218787,"total":145,"current":26}
+{"_e":"metro:bundling:progress","_t":1791546902154,"id":"2","progress":0.23765624999999999,"total":240,"current":117}
+{"_e":"metro:bundling:progress","_t":1791546902254,"id":"2","progress":0.2831150447539249,"total":374,"current":199}
+{"_e":"metro:bundling:progress","_t":1791546902354,"id":"2","progress":0.47430680893431115,"total":469,"current":323}
+{"_e":"metro:bundling:progress","_t":1791546902454,"id":"2","progress":0.743499466002136,"total":530,"current":457}
+{"_e":"metro:bundling:progress","_t":1791546902573,"id":"2","progress":0.785210420334089,"total":562,"current":498}
+{"_e":"metro:bundling:progress","_t":1791546902673,"id":"2","progress":0.8030382789495824,"total":645,"current":578}
+{"_e":"metro:bundling:progress","_t":1791546902773,"id":"2","progress":0.8849931412894376,"total":675,"current":635}
+{"_e":"metro:bundling:progress","_t":1791546902878,"id":"2","progress":0.9971611086002066,"total":704,"current":703}
+{"_e":"metro:bundling:progress","_t":1791546914098,"id":"2","progress":0.999,"total":704,"current":704}
+{"_e":"metro:bundling:progress","_t":1791546914287,"id":"2","progress":0.999,"total":705,"current":704}
+{"_e":"metro:bundling:progress","_t":1791546914387,"id":"2","progress":0.999,"total":864,"current":759}
+{"_e":"metro:bundling:progress","_t":1791546914487,"id":"2","progress":0.999,"total":923,"current":889}
+{"_e":"metro:bundling:progress","_t":1791546914601,"id":"2","progress":0.999,"total":941,"current":940}
+{"_e":"metro:bundling:progress","_t":1791546915705,"id":"2","progress":0.999,"total":941,"current":941}
+{"_e":"metro:bundling:progress","_t":1791546915831,"id":"2","progress":0.999,"total":942,"current":942}
+{"_e":"metro:bundling:done","_t":1791546916104,"id":"2","total":942,"ms":14159.9854}
+{"_e":"metro:client_log","_t":1791546920496,"level":"warn","data":["SafeAreaView has been deprecated and will be removed in a future release. Please use 'react-native-safe-area-context' instead. See https://github.com/AppAndFlow/react-native-safe-area-context"]}
+{"_e":"metro:bundling:started","_t":1791547699263,"id":"7","platform":"android","environment":null,"entry":"node_modules\\expo\\AppEntry.js"}
+{"_e":"metro:bundling:progress","_t":1791547699264,"id":"7","progress":0,"total":1,"current":0}
+{"_e":"metro:bundling:progress","_t":1791547699267,"id":"7","progress":0,"total":1,"current":0}
+{"_e":"metro:bundling:failed","_t":1791547699376,"id":"7","message":"SyntaxError: C:\\TUNAAAYE\\TunaEyePhone\\App.js: Unexpected token (1952:17)\n\n  1950 |               );\n  1951 |             })}\n> 1952 |           </View>\n       |                  ^","importStack":null,"filename":"App.js","targetModuleName":null,"originModulePath":null}
+{"_e":"metro:bundling:started","_t":1791547793505,"id":"a","platform":"android","environment":null,"entry":"node_modules\\expo\\AppEntry.js"}
+{"_e":"metro:bundling:progress","_t":1791547793505,"id":"a","progress":0,"total":1,"current":0}
+{"_e":"metro:bundling:progress","_t":1791547793506,"id":"a","progress":0,"total":1,"current":0}
+{"_e":"metro:bundling:failed","_t":1791547793594,"id":"a","message":"SyntaxError: C:\\TUNAAAYE\\TunaEyePhone\\App.js: Unexpected token (1952:17)\n\n  1950 |               );\n  1951 |             })}\n> 1952 |           </View>\n       |                  ^","importStack":null,"filename":"App.js","targetModuleName":null,"originModulePath":null}
+{"_e":"metro:bundling:started","_t":1791547902257,"id":"d","platform":"android","environment":null,"entry":"node_modules\\expo\\AppEntry.js"}
+{"_e":"metro:bundling:progress","_t":1791547902259,"id":"d","progress":0,"total":1,"current":0}
+{"_e":"metro:bundling:progress","_t":1791547902260,"id":"d","progress":0,"total":1,"current":0}
+{"_e":"metro:bundling:progress","_t":1791547902992,"id":"d","progress":0,"total":1,"current":0}
+{"_e":"metro:bundling:done","_t":1791547903336,"id":"d","total":1,"ms":1079.1972}
+{"_e":"metro:client_log","_t":1791547908758,"level":"warn","data":["SafeAreaView has been deprecated and will be removed in a future release. Please use 'react-native-safe-area-context' instead. See https://github.com/AppAndFlow/react-native-safe-area-context"]}
