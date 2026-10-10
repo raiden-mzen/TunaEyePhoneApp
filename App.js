@@ -514,18 +514,164 @@ function ask(title, body, acts) { S.dialog = { title, body, acts }; render(); }
 
 /* ---------- phone pairing: the phone scans the kiosk's QR code ---------- */
 // The kiosk shows a QR such as  tunaeye://pair?k=KIOSK-01  (or https://kiosk.tunaeye.example/pair?k=KIOSK-01)
+
+const DEFAULT_PI_API = 'http://10.42.0.1:5000';
+
+let pairingInProgress = false;
+
 function parseKioskCode(data) {
-  const str = String(data || '');
+  const str = String(data || '').trim();
+
+  if (!str) return null;
+
+  // Support kiosk JSON QR format
+  try {
+    const qr = JSON.parse(str);
+
+    if (
+      qr &&
+      typeof qr.ssid === 'string' &&
+      typeof qr.apiUrl === 'string'
+    ) {
+      const apiUrl = qr.apiUrl.replace(/\/+$/, '');
+
+      if (apiUrl !== DEFAULT_PI_API) return null;
+
+      return {
+        kioskId: qr.kioskId || 'KIOSK-01',
+        ssid: qr.ssid,
+        apiUrl,
+        streamUrl: qr.streamUrl || null,
+      };
+    }
+  } catch {
+    // Try legacy pairing URL
+  }
+
+  // Support old TunaEye QR format
   const m = /[?&]k=([A-Za-z0-9-]{3,32})/.exec(str);
-  if (m && /^(tunaeye:\/\/pair|https:\/\/kiosk\.tunaeye\.example\/pair)/.test(str)) return m[1];
+
+  if (
+    m &&
+    /^(tunaeye:\/\/pair|https:\/\/kiosk\.tunaeye\.example\/pair)/.test(str)
+  ) {
+    return {
+      kioskId: m[1],
+      ssid: 'TunaRpi',
+      apiUrl: DEFAULT_PI_API,
+      streamUrl: null,
+    };
+  }
+
   return null;
 }
-function connectPhone(kioskId) {
-  const s = S.session; if (!s || s.phone === 'connected') return;
-  s.phone = 'connected'; S.phoneLinked = true; S.kioskId = kioskId || 'KIOSK-01'; S.scanError = ''; render();
+
+async function verifyKioskConnection(config) {
+  const controller = new AbortController();
+
+  const timeout = setTimeout(() => {
+    controller.abort();
+  }, 6000);
+
+  try {
+    const response = await fetch(
+      `${config.apiUrl}/status`,
+      {
+        method: 'GET',
+        signal: controller.signal,
+        headers: {
+          Accept: 'application/json',
+        },
+      }
+    );
+
+    if (!response.ok) {
+      throw new Error(
+        `Raspberry Pi returned HTTP ${response.status}`
+      );
+    }
+
+    const status = await response.json();
+
+    if (!status || typeof status !== 'object') {
+      throw new Error('Invalid Raspberry Pi response');
+    }
+
+    return status;
+  } finally {
+    clearTimeout(timeout);
+  }
 }
+
+function connectPhone(config) {
+  const s = S.session;
+
+  if (!s) return;
+
+  s.phone = 'connected';
+
+  S.phoneLinked = true;
+  S.kioskId = config.kioskId || 'KIOSK-01';
+  S.piApiUrl = config.apiUrl || DEFAULT_PI_API;
+  S.piStreamUrl = config.streamUrl || null;
+  S.piStatus = 'connected';
+  S.scanError = '';
+
+  render();
+}
+
+async function pairWithKiosk(data) {
+  if (pairingInProgress) return false;
+
+  const config = parseKioskCode(data);
+
+  if (!config) {
+    S.scanError =
+      'Invalid TunaEye QR code. Scan the QR displayed by the kiosk.';
+    render();
+    return false;
+  }
+
+  pairingInProgress = true;
+
+  S.piStatus = 'connecting';
+  S.scanError = '';
+  render();
+
+  try {
+    await verifyKioskConnection(config);
+
+    if (!S.session || S.screen !== 'pair') {
+      return false;
+    }
+
+    connectPhone(config);
+
+    return true;
+  } catch (error) {
+    S.phoneLinked = false;
+    S.piStatus = 'error';
+
+    if (S.session) {
+      S.session.phone = 'waiting';
+    }
+
+    S.scanError =
+      `Cannot reach Raspberry Pi. Connect to ` +
+      `${config.ssid} Wi-Fi and scan again.`;
+
+    console.log('TunaEye pairing failed:', error);
+
+    render();
+    return false;
+  } finally {
+    pairingInProgress = false;
+  }
+}
+
 let askCamera = () => {};
 let camRef = null;
+
 
 async function checkRaspberryPi() {
   S.piStatus = 'connecting'; render();
@@ -1456,13 +1602,47 @@ function Scanner() {
       </Card>
     );
   }
-  return (
-    <View style={box}>
-      <CameraView style={StyleSheet.absoluteFill} facing="back" barcodeScannerSettings={{ barcodeTypes: ['qr'] }} onBarcodeScanned={onScan} />
-      <View pointerEvents="none" style={{ width: '68%', aspectRatio: 1, alignItems: 'center', justifyContent: 'center' }}><Brackets size={190} /></View>
-      {chip('Looking for the kiosk code…', 'info', '', { position: 'absolute', top: 14, alignSelf: 'center' })}
+  
+return (
+  <View style={box}>
+    <CameraView
+      style={StyleSheet.absoluteFill}
+      facing="back"
+      barcodeScannerSettings={{
+        barcodeTypes: ['qr'],
+      }}
+      onBarcodeScanned={({ data }) => {
+        if (!data || pairingInProgress) return;
+        pairWithKiosk(data);
+      }}
+    />
+
+    <View
+      pointerEvents="none"
+      style={{
+        width: '68%',
+        aspectRatio: 1,
+        alignItems: 'center',
+        justifyContent: 'center',
+      }}
+    >
+      <Brackets size={190} />
     </View>
-  );
+
+    {chip(
+      S.piStatus === 'connecting'
+        ? 'Connecting to Raspberry Pi…'
+        : 'Looking for the kiosk code…',
+      'info',
+      '',
+      {
+        position: 'absolute',
+        top: 14,
+        alignSelf: 'center',
+      }
+    )}
+  </View>
+);
 }
 
 screens.pair = () => {
